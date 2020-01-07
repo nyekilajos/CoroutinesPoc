@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -17,9 +18,30 @@
             type="com.epam.nyekilajos.coroutinespoc.viewmodel.BeerListViewModel" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/beerCounterLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/side_padding"
+            android:text="@string/beers_counter_caption"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/beerCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/side_padding"
+            android:text="@{vm.drunkenBeers.toString()}"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toRightOf="@id/beerCounterLabel"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="56" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -28,14 +50,19 @@
             app:adapter="@{adapter}"
             app:data="@{vm.getBeers()}"
             app:itemDecoration="@{UiUtils.createDividerItemDecoration(recyclerView.getContext())}"
-            app:layoutManager="@{UiUtils.createLinearLayoutManager(recyclerView.getContext())}" />
+            app:layoutManager="@{UiUtils.createLinearLayoutManager(recyclerView.getContext())}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/beerCounter" />
 
         <ProgressBar
             android:layout_width="@dimen/progress_indicator_size"
             android:layout_height="@dimen/progress_indicator_size"
-            android:layout_gravity="center"
-            android:visibility="@{vm.loading ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{vm.loading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

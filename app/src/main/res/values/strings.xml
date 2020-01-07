@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CoroutinesPoc</string>
+    <string name="beers_counter_caption">You drank this may beers: </string>
 </resources>
