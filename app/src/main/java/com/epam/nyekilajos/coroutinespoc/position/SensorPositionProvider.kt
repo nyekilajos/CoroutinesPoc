@@ -6,23 +6,23 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.hardware.SensorManager.AXIS_X
 import android.hardware.SensorManager.AXIS_Z
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.zip
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.asFlow
 import kotlin.math.PI
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 class SensorPositionProvider {
 
-    val positionReadings = ConflatedBroadcastChannel<Position>()
-
+    private val positionReadingsChannel = ConflatedBroadcastChannel<Position>()
     private val accelerometerReadings = Channel<FloatArray>(Channel.CONFLATED)
     private val magnetoMeterReadings = Channel<FloatArray>(Channel.CONFLATED)
+
+    val positionReadings = positionReadingsChannel.asFlow()
 
     private val accelerometerListener: SensorEventListener = object : SensorEventListener {
         override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -73,7 +73,7 @@ class SensorPositionProvider {
 
         GlobalScope.launch(Dispatchers.Default) {
             positions.consumeEach {
-                positionReadings.send(it)
+                positionReadingsChannel.send(it)
             }
         }
     }
